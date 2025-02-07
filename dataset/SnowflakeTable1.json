@@ -10,7 +10,7 @@
 		"schema": [
 			{
 				"name": "LICENSE_ISSUE_DATE",
-				"type": "DATE"
+				"type": "VARCHAR"
 			},
 			{
 				"name": "LICENSE_NUMBER",
@@ -42,7 +42,7 @@
 			},
 			{
 				"name": "DI_LOAD_DT",
-				"type": "DATE"
+				"type": "VARCHAR"
 			}
 		],
 		"typeProperties": {
