@@ -39,7 +39,7 @@
 		],
 		"typeProperties": {
 			"schema": "TEMP_SCHEMA",
-			"table": "SEATTLE_PET_LICENSES"
+			"table": "PET_LICENSE_STAGE"
 		}
 	}
 }
