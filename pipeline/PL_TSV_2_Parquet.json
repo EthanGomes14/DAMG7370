@@ -103,19 +103,6 @@
 					},
 					"enableStaging": false,
 					"validateDataConsistency": true,
-					"logSettings": {
-						"enableCopyActivityLog": true,
-						"copyActivityLogSettings": {
-							"logLevel": "Warning",
-							"enableReliableLogging": false
-						},
-						"logLocationSettings": {
-							"linkedServiceName": {
-								"referenceName": "stgblobspring2025_ethan_LS",
-								"type": "LinkedServiceReference"
-							}
-						}
-					},
 					"translator": {
 						"type": "TabularTranslator",
 						"typeConversion": true,
