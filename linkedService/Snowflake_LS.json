@@ -1,0 +1,17 @@
+{
+	"name": "Snowflake_LS",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SnowflakeV2",
+		"typeProperties": {
+			"authenticationType": "Basic",
+			"accountIdentifier": "baa41438.east-us-2.azure",
+			"user": "ETHAN_DADABI_USER",
+			"database": "ETHAN_DADABI_DB",
+			"warehouse": "ETHAN_DADABI_WH",
+			"role": "ETHAN_DADABI_ROLE",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDY4RTVFQURFLUIyM0YtNEVFOS1CQzM5LTQ2MTJDQUVEMjJGOF9jZDA0YWYxZS01MTE5LTRjMGUtYWI3NC05NDRmZmU0NzE2MzgiDQp9"
+		}
+	}
+}
