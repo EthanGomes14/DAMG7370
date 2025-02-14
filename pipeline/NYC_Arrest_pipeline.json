@@ -54,7 +54,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "NYC_Arrest_Parquet",
+						"referenceName": "Parquet3",
 						"type": "DatasetReference"
 					}
 				]
@@ -79,17 +79,6 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "ParquetSource",
-						"storeSettings": {
-							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "ParquetReadSettings"
-						}
-					},
 					"sink": {
 						"type": "SnowflakeV2Sink",
 						"importSettings": {
@@ -105,12 +94,6 @@
 						"path": ""
 					}
 				},
-				"inputs": [
-					{
-						"referenceName": "NYC_Arrest_Parquet",
-						"type": "DatasetReference"
-					}
-				],
 				"outputs": [
 					{
 						"referenceName": "SnowflakeTable2",
@@ -119,6 +102,12 @@
 				]
 			}
 		],
+		"variables": {
+			"myFileName": {
+				"type": "String",
+				"defaultValue": "nyc_arrest_data.parquet"
+			}
+		},
 		"annotations": []
 	}
 }
