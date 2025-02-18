@@ -1,0 +1,65 @@
+{
+	"name": "DF_Clean_Data_From_TSV",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
+					},
+					"name": "readTSVfile"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "TransposeColumns"
+				},
+				{
+					"name": "PickRequiredColumns"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     Job_Id_Param as string (\"10\")",
+				"}",
+				"source(output(",
+				"          License_Issue_Date as string,",
+				"          License_Number as string,",
+				"          Animal_Name as string,",
+				"          Species as string,",
+				"          Primary_Breed as string,",
+				"          Secondary_Breed as string,",
+				"          ZIP_Code as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     limit: 100,",
+				"     ignoreNoFilesFound: false) ~> readTSVfile",
+				"readTSVfile derive(LIC_ISSUE_DATE = toDate(License_Issue_Date, 'MMMM dd yyyy'),",
+				"          Secondary_Breed = iifNull(Secondary_Breed, 'Unknown'),",
+				"          ZIP_Code = lpad(toString(ZIP_Code),5,'0'),",
+				"          Species = upper(Species),",
+				"          License_Number = toInteger(translate(License_Number,'S','')),",
+				"          Animal_Name = translate(Animal_Name, '()[]', ''),",
+				"          Job_Exec_ID = $Job_Id_Param,",
+				"          Load_Dt = currentDate()) ~> TransposeColumns",
+				"TransposeColumns select(mapColumn(",
+				"          License_Number,",
+				"          Animal_Name,",
+				"          Species,",
+				"          Primary_Breed,",
+				"          Secondary_Breed,",
+				"          ZIP_Code,",
+				"          LIC_ISSUE_DATE,",
+				"          Job_ID = Job_Exec_ID,",
+				"          Load_Dt",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> PickRequiredColumns"
+			]
+		}
+	}
+}
