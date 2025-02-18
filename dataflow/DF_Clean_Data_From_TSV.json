@@ -18,7 +18,7 @@
 						"referenceName": "SnowflakeTable3",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "SinkToSnowflake"
 				}
 			],
 			"transformations": [
@@ -99,7 +99,7 @@
 				"          ZIP_CODE = ZIP_Code,",
 				"          DI_JOB_ID = Job_Exec_ID,",
 				"          DI_LOAD_DT = Job_Load_Date",
-				"     )) ~> sink1"
+				"     )) ~> SinkToSnowflake"
 			]
 		}
 	}
