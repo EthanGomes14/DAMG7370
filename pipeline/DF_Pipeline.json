@@ -37,16 +37,7 @@
 			{
 				"name": "LoadBreedDim",
 				"type": "ExecuteDataFlow",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
-				"dependsOn": [
-					{
-						"activity": "CleanPetLicData",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -60,7 +51,7 @@
 						"referenceName": "DF_Breed_Dim",
 						"type": "DataFlowReference",
 						"parameters": {
-							"DI_JOB_ID": {
+							"Job_ID": {
 								"value": "'@{pipeline().RunId}'",
 								"type": "Expression"
 							}
@@ -76,6 +67,8 @@
 			{
 				"name": "LoadLocationDim",
 				"type": "ExecuteDataFlow",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "LoadBreedDim",
