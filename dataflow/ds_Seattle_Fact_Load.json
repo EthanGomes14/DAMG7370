@@ -40,7 +40,15 @@
 					"name": "FctMaxID"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Snowflake_Stage_SEATTLE_PET_LICENSES",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "joinLocationDim"
@@ -139,7 +147,7 @@
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> joinDateDim",
-				"aggregate1 keyGenerate(output({undefined} as long),",
+				"aggregate1 keyGenerate(output(RowNum as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKey1",
 				"joinDateDim, FctMaxID join(1==1,",
@@ -147,7 +155,34 @@
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> join1",
-				"join1 aggregate() ~> aggregate1"
+				"join1 aggregate(groupBy(LOCATION_ID,",
+				"          ISSUED_DATE_ID,",
+				"          BREED_ID),",
+				"     COUNT_ROW = count(PET_LICENSE_SK)) ~> aggregate1",
+				"surrogateKey1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          PET_LICENSE_SK as string,",
+				"          ISSUED_DATE_ID as string,",
+				"          LOCATION_ID as string,",
+				"          BREED_ID as string,",
+				"          DI_JOB_ID as string,",
+				"          DI_CREATED_DT as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          PET_LICENSE_SK = COUNT_ROW,",
+				"          ISSUED_DATE_ID,",
+				"          LOCATION_ID,",
+				"          BREED_ID",
+				"     )) ~> sink1"
 			]
 		}
 	}
