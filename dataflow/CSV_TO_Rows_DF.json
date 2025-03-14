@@ -1,0 +1,62 @@
+{
+	"name": "CSV_TO_Rows_DF",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Imdb_name_basics",
+						"type": "DatasetReference"
+					},
+					"name": "NameBasics"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "flatten1"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     JOB_ID as string (\"10\")",
+				"}",
+				"source(output(",
+				"          nconst as string,",
+				"          primaryName as string,",
+				"          birthYear as string,",
+				"          deathYear as string,",
+				"          primaryProfession as string,",
+				"          knownForTitles as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> NameBasics",
+				"NameBasics derive(knownForTitles = split(knownForTitles,','),",
+				"          primaryProfession = split(primaryProfession,','),",
+				"          birthYear = iif(birthYear == \"\\\\N\", 'unknown', birthYear),",
+				"          deathYear = iif(deathYear == \"\\\\N\", 'unknown', deathYear),",
+				"          primaryName = iif(primaryName == \"\\\\N\", 'unknown', primaryName),",
+				"          job_id = $JOB_ID,",
+				"          di_job_date = currentTimestamp()) ~> derivedColumn1",
+				"derivedColumn1 foldDown(unrollMultiple(primaryProfession,knownForTitles),",
+				"     mapColumn(",
+				"          nconst,",
+				"          primaryName,",
+				"          birthYear,",
+				"          deathYear,",
+				"          primaryProfession,",
+				"          knownForTitles,",
+				"          job_id,",
+				"          di_job_date",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1"
+			]
+		}
+	}
+}
