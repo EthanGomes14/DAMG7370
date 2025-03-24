@@ -1,0 +1,60 @@
+{
+	"name": "Sales_Flow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"name": "sourceSalesFACT"
+				}
+			],
+			"sinks": [
+				{
+					"name": "sink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "surrogateKey"
+				},
+				{
+					"name": "derivedColumn"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          invoiceId as integer,",
+				"          customerid as short,",
+				"          invoiceDate as date,",
+				"          ShipTo as string,",
+				"          ShipTo_City as string,",
+				"          ShipTo_Country as string,",
+				"          SalespersonPersonID as short,",
+				"          SalespersonName as string,",
+				"          total_product_cnt as short,",
+				"          Total as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false) ~> sourceSalesFACT",
+				"sourceSalesFACT keyGenerate(output(customer_sk as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey",
+				"surrogateKey derive(pid = \"0\",",
+				"          DI_CreatedDt = currentDate()) ~> derivedColumn",
+				"derivedColumn sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     mapColumn(",
+				"          INVOICE_SK = customer_sk,",
+				"          INVOICE_ID = invoiceId,",
+				"          CUSTOMER_ID = customerid,",
+				"          INVOICE_DT = invoiceDate,",
+				"          TOTAL_PRODUCT_CNT = total_product_cnt,",
+				"          TOTAL_PRODUCT_COST = Total,",
+				"          DI_CREATEDDT = DI_CreatedDt,",
+				"          PID = pid",
+				"     ),",
+				"     format: 'table') ~> sink"
+			]
+		}
+	}
+}
