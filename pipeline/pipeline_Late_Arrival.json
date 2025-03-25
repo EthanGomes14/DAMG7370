@@ -5,6 +5,8 @@
 			{
 				"name": "DF_Customer_Dim_1",
 				"type": "ExecuteDataFlow",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -19,10 +21,7 @@
 						"referenceName": "DF_Customer_Dim_1",
 						"type": "DataFlowReference",
 						"parameters": {
-							"Job_ID": {
-								"value": "'@{pipeline().RunId}'",
-								"type": "Expression"
-							}
+							"Job_ID": "\"10\""
 						}
 					},
 					"compute": {
@@ -58,10 +57,7 @@
 						"referenceName": "DF_Fact_Sales",
 						"type": "DataFlowReference",
 						"parameters": {
-							"Job_ID": {
-								"value": "'@{pipeline().RunId}'",
-								"type": "Expression"
-							}
+							"Job_ID": "\"10\""
 						}
 					},
 					"compute": {
@@ -74,8 +70,6 @@
 			{
 				"name": "DF_Customer_Dim_2",
 				"type": "ExecuteDataFlow",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "DF_Fact_Sales",
@@ -97,10 +91,7 @@
 						"referenceName": "DF_Customer_Dim_2",
 						"type": "DataFlowReference",
 						"parameters": {
-							"Job_ID": {
-								"value": "'@{pipeline().RunId}'",
-								"type": "Expression"
-							}
+							"Job_ID": "\"10\""
 						}
 					},
 					"compute": {
