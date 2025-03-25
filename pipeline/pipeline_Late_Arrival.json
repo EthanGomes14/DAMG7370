@@ -19,7 +19,13 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "DF_Customer_Dim_1",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"parameters": {
+							"Job_ID": {
+								"value": "'@{pipeline().RunId}'",
+								"type": "Expression"
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
@@ -52,7 +58,13 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "DF_Fact_Sales",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"parameters": {
+							"Job_ID": {
+								"value": "'@{pipeline().RunId}'",
+								"type": "Expression"
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
@@ -83,7 +95,13 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "DF_Customer_Dim_2",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"parameters": {
+							"Job_ID": {
+								"value": "'@{pipeline().RunId}'",
+								"type": "Expression"
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
