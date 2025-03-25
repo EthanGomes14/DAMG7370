@@ -1,5 +1,5 @@
 {
-	"name": "Sales_Flow",
+	"name": "DF_Fact_Sales",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
