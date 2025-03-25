@@ -29,7 +29,7 @@
 					"name": "derivedColumn"
 				},
 				{
-					"name": "select1"
+					"name": "SelectColumns"
 				}
 			],
 			"scriptLines": [
@@ -56,8 +56,8 @@
 				"          DI_CreatedDt",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 sink(allowSchemaDrift: true,",
+				"     skipDuplicateMapOutputs: true) ~> SelectColumns",
+				"SelectColumns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          CUSTOMER_SK as decimal(38,0),",
