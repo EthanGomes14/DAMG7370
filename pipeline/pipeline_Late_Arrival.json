@@ -35,6 +35,8 @@
 			{
 				"name": "DF_Fact_Sales",
 				"type": "ExecuteDataFlow",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "DF_Customer_Dim_1",
