@@ -27,6 +27,9 @@
 				},
 				{
 					"name": "derivedColumn"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -51,8 +54,26 @@
 				"surrogateKey derive(pid = \"0\",",
 				"          DI_CreatedDt = currentUTC('en-US'),",
 				"          invoiceId = toInteger(invoiceId),",
-				"          customerid = toInteger(customerid)) ~> derivedColumn",
-				"derivedColumn sink(allowSchemaDrift: true,",
+				"          total_product_cnt = toInteger(total_product_cnt),",
+				"          Total = toFloat(Total)) ~> derivedColumn",
+				"derivedColumn select(mapColumn(",
+				"          invoiceId,",
+				"          customerid,",
+				"          invoiceDate,",
+				"          ShipTo,",
+				"          ShipTo_City,",
+				"          ShipTo_Country,",
+				"          SalespersonPersonID,",
+				"          SalespersonName,",
+				"          total_product_cnt,",
+				"          Total,",
+				"          invoice_sk,",
+				"          pid,",
+				"          DI_CreatedDt",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          INVOICE_SK as decimal(38,0),",
@@ -68,6 +89,7 @@
 				"     insertable:true,",
 				"     updateable:false,",
 				"     upsertable:false,",
+				"     truncate:true,",
 				"     format: 'table',",
 				"     mapColumn(",
 				"          INVOICE_SK = invoice_sk,",
