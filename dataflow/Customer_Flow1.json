@@ -23,6 +23,9 @@
 				},
 				{
 					"name": "derivedColumn"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -38,8 +41,18 @@
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKey",
 				"surrogateKey derive(pid = \"0\",",
-				"          DI_CreatedDt = currentDate()) ~> derivedColumn",
-				"derivedColumn sink(allowSchemaDrift: true,",
+				"          DI_CreatedDt = currentDate(),",
+				"          CustomerName = rtrim(CustomerName)) ~> derivedColumn",
+				"derivedColumn select(mapColumn(",
+				"          customerid,",
+				"          CustomerName,",
+				"          customer_sk,",
+				"          pid,",
+				"          DI_CreatedDt",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
 				"     mapColumn(",

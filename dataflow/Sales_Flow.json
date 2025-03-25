@@ -5,6 +5,10 @@
 		"typeProperties": {
 			"sources": [
 				{
+					"dataset": {
+						"referenceName": "Sales_Data",
+						"type": "DatasetReference"
+					},
 					"name": "sourceSalesFACT"
 				}
 			],
@@ -23,19 +27,20 @@
 			],
 			"scriptLines": [
 				"source(output(",
-				"          invoiceId as integer,",
-				"          customerid as short,",
-				"          invoiceDate as date,",
+				"          invoiceId as string,",
+				"          customerid as string,",
+				"          invoiceDate as string,",
 				"          ShipTo as string,",
 				"          ShipTo_City as string,",
 				"          ShipTo_Country as string,",
-				"          SalespersonPersonID as short,",
+				"          SalespersonPersonID as string,",
 				"          SalespersonName as string,",
-				"          total_product_cnt as short,",
-				"          Total as double",
+				"          total_product_cnt as string,",
+				"          Total as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
-				"     validateSchema: false) ~> sourceSalesFACT",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourceSalesFACT",
 				"sourceSalesFACT keyGenerate(output(customer_sk as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKey",
