@@ -5,8 +5,6 @@
 			{
 				"name": "DF_Customer_Dim_1",
 				"type": "ExecuteDataFlow",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -37,8 +35,6 @@
 			{
 				"name": "DF_Fact_Sales",
 				"type": "ExecuteDataFlow",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "DF_Customer_Dim_1",
@@ -76,6 +72,8 @@
 			{
 				"name": "DF_Customer_Dim_2",
 				"type": "ExecuteDataFlow",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "DF_Fact_Sales",
