@@ -14,6 +14,10 @@
 			],
 			"sinks": [
 				{
+					"dataset": {
+						"referenceName": "Dim_Customer",
+						"type": "DatasetReference"
+					},
 					"name": "sink"
 				}
 			],
@@ -42,7 +46,8 @@
 				"     stepValue: 1L) ~> surrogateKey",
 				"surrogateKey derive(pid = \"0\",",
 				"          DI_CreatedDt = currentDate(),",
-				"          CustomerName = rtrim(CustomerName)) ~> derivedColumn",
+				"          CustomerName = rtrim(CustomerName),",
+				"          customerid = toInteger(customerid)) ~> derivedColumn",
 				"derivedColumn select(mapColumn(",
 				"          customerid,",
 				"          CustomerName,",
@@ -54,15 +59,26 @@
 				"     skipDuplicateMapOutputs: true) ~> select1",
 				"select1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     input(",
+				"          CUSTOMER_SK as decimal(38,0),",
+				"          CUSTOMER_ID as decimal(38,0),",
+				"          CUSTOMER_NAME as string,",
+				"          DI_CREATEDDT as timestamp,",
+				"          PID as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     mapColumn(",
 				"          CUSTOMER_SK = customer_sk,",
 				"          CUSTOMER_ID = customerid,",
 				"          CUSTOMER_NAME = CustomerName,",
-				"          PID = pid,",
-				"          DI_CREATEDDT = DI_CreatedDt",
-				"     ),",
-				"     format: 'table') ~> sink"
+				"          DI_CREATEDDT = DI_CreatedDt,",
+				"          PID = pid",
+				"     )) ~> sink"
 			]
 		}
 	}
