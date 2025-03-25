@@ -1,5 +1,5 @@
 {
-	"name": "Customer_Flow1",
+	"name": "DF_Customer_Dimension_1",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -30,6 +30,9 @@
 				},
 				{
 					"name": "select1"
+				},
+				{
+					"name": "sort1"
 				}
 			],
 			"scriptLines": [
@@ -57,7 +60,8 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 sink(allowSchemaDrift: true,",
+				"select1 sort(asc(customerid, true)) ~> sort1",
+				"sort1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          CUSTOMER_SK as decimal(38,0),",
