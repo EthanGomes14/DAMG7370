@@ -12,20 +12,13 @@
 					"name": "source1"
 				}
 			],
-			"sinks": [
-				{
-					"name": "sink1"
-				}
-			],
+			"sinks": [],
 			"transformations": [
 				{
 					"name": "derivedColumn1"
 				},
 				{
-					"name": "derivedColumn2"
-				},
-				{
-					"name": "join1"
+					"name": "unpivot1"
 				}
 			],
 			"scriptLines": [
@@ -148,17 +141,28 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 derive() ~> derivedColumn1",
-				"join1 derive(ViolationComments = split(Violations,'- Comments:')) ~> derivedColumn2",
-				"derivedColumn1 join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
-				"     joinType:'outer',",
-				"     matchType:'exact',",
-				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join1",
-				"derivedColumn2 sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"source1 derive({Violation Description - 1} = toString({Violation Description - 1})) ~> derivedColumn1",
+				"derivedColumn1 unpivot(output(",
+				"          ViolationIndex as string,",
+				"          {Violation Description - 1} as string,",
+				"          {Violation Description - 2} as string",
+				"     ),",
+				"     ungroupBy({Restaurant Name},",
+				"          {Inspection Type},",
+				"          {Inspection Date},",
+				"          {Inspection Score},",
+				"          {Street Number},",
+				"          {Street Name},",
+				"          {Street Direction},",
+				"          {Street Type},",
+				"          {Street Unit},",
+				"          {Street Address},",
+				"          {Zip Code},",
+				"          {Inspection Month},",
+				"          {Inspection Year},",
+				"          {Lat Long Location}),",
+				"     lateral: true,",
+				"     ignoreNullPivots: true) ~> unpivot1"
 			]
 		}
 	}
