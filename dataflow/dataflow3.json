@@ -1,5 +1,5 @@
 {
-	"name": "DF_Dallas_22_23",
+	"name": "dataflow3",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -15,10 +15,19 @@
 			"sinks": [],
 			"transformations": [
 				{
-					"name": "unpivot1"
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "union1"
 				},
 				{
 					"name": "select1"
+				},
+				{
+					"name": "surrogateKey1"
 				}
 			],
 			"scriptLines": [
@@ -91,23 +100,23 @@
 				"          {Violation Detail - 14} as string,",
 				"          {Violation Memo - 14} as string,",
 				"          {Violation Description - 15} as string,",
-				"          {Violation Points - 15} as string,",
+				"          {Violation Points - 15} as double,",
 				"          {Violation Detail - 15} as string,",
 				"          {Violation Memo - 15} as string,",
 				"          {Violation Description - 16} as string,",
-				"          {Violation Points - 16} as string,",
+				"          {Violation Points - 16} as double,",
 				"          {Violation Detail - 16} as string,",
 				"          {Violation Memo - 16} as string,",
 				"          {Violation Description - 17} as string,",
-				"          {Violation Points - 17} as string,",
+				"          {Violation Points - 17} as double,",
 				"          {Violation Detail - 17} as string,",
 				"          {Violation Memo - 17} as string,",
 				"          {Violation Description - 18} as string,",
-				"          {Violation Points - 18} as string,",
+				"          {Violation Points - 18} as double,",
 				"          {Violation Detail - 18} as string,",
 				"          {Violation Memo - 18} as string,",
 				"          {Violation Description - 19} as string,",
-				"          {Violation Points - 19} as string,",
+				"          {Violation Points - 19} as double,",
 				"          {Violation Detail - 19} as string,",
 				"          {Violation Memo - 19} as string,",
 				"          {Violation Description - 20} as string,",
@@ -141,29 +150,39 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"select1 unpivot(output(",
-				"          ViolationIndex as string,",
-				"          {Violation Points - 1} as double,",
-				"          {Violation Points - 2} as double",
-				"     ),",
-				"     ungroupBy({Restaurant Name},",
-				"          {Inspection Type},",
-				"          {Inspection Date},",
-				"          {Inspection Score},",
-				"          {Violation Description - 1}),",
-				"     lateral: true,",
-				"     ignoreNullPivots: true) ~> unpivot1",
-				"source1 select(mapColumn(",
+				"source1 derive({Violation Description} = {Violation Description - 1},",
+				"          {Violation Points} = {Violation Points - 1},",
+				"          {Violation Detail } = {Violation Detail - 1},",
+				"          {Violation Memo} = {Violation Memo - 1},",
+				"          SourceViolationNum = 1) ~> derivedColumn1",
+				"surrogateKey1 derive({Violation Description} = {Violation Description - 2},",
+				"          {Violation Points} = {Violation Points - 2},",
+				"          {Violation Detail } = {Violation Detail - 2},",
+				"          {Violation Memo} = {Violation Memo - 2},",
+				"          SourceViolationNum = 2) ~> derivedColumn2",
+				"derivedColumn2, derivedColumn1 union(byName: false)~> union1",
+				"union1 select(mapColumn(",
 				"          {Restaurant Name},",
 				"          {Inspection Type},",
 				"          {Inspection Date},",
 				"          {Inspection Score},",
-				"          {Violation Points - 1},",
-				"          {Violation Points - 2},",
-				"          {Violation Description - 1}",
+				"          {Street Number},",
+				"          {Street Name},",
+				"          {Street Direction},",
+				"          {Street Type},",
+				"          {Inspection Month},",
+				"          {Inspection Year},",
+				"          {Lat Long Location},",
+				"          {Violation Description},",
+				"          {Violation Points},",
+				"          {Violation Detail },",
+				"          {Violation Memo}",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"source1 keyGenerate(output(Primarykey as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1"
 			]
 		}
 	}
