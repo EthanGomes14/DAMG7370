@@ -1,0 +1,103 @@
+{
+	"name": "ChicagoFoodflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "flatten2"
+				},
+				{
+					"name": "flatten3"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {Inspection ID} as string,",
+				"          {DBA Name} as string,",
+				"          {AKA Name} as string,",
+				"          {License #} as string,",
+				"          {Facility Type} as string,",
+				"          Risk as string,",
+				"          Address as string,",
+				"          City as string,",
+				"          State as string,",
+				"          Zip as string,",
+				"          {Inspection Date} as string,",
+				"          {Inspection Type} as string,",
+				"          Results as string,",
+				"          Violations as string,",
+				"          Latitude as string,",
+				"          Longitude as string,",
+				"          Location as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false) ~> source1",
+				"source1 derive({AKA Name} = iif(isNull(toString(byName('AKA Name'))), 'Unknown', toString(byName('AKA Name'))),",
+				"          {Facility Type} = iif(isNull(toString(byName('Facility Type'))), 'Not Specified', toString(byName('Facility Type'))),",
+				"          Risk = iif(isNull(toString(byName('Risk'))), 'Unknown', toString(byName('Risk'))),",
+				"          Address = iif(isNull(toString(byName('Address'))), 'No Address', toString(byName('Address'))),",
+				"          City = iif(isNull(toString(byName('City'))), 'Unknown City', toString(byName('City'))),",
+				"          State = iif(isNull(toString(byName('State'))), 'Unknown State', toString(byName('State'))),",
+				"          Zip = iif(isNull(toString(byName('Zip'))), '00000', toString(byName('Zip'))),",
+				"          {Inspection Type} = iif(isNull(toString(byName('Inspection Type'))), 'Not Inspected', toString(byName('Inspection Type'))),",
+				"          Results = iif(isNull(toString(byName('Results'))), 'No Result', toString(byName('Results'))),",
+				"          ViolationDetails = split(Violations,' - Comments:')[1],",
+				"          ViolationComments = split(Violations,' - Comments:'),",
+				"          Latitude = iif(isNull(toString(byName('Latitude'))), '0.0', toString(byName('Latitude'))),",
+				"          Longitude = iif(isNull(toString(byName('Longitude'))), '0.0', toString(byName('Longitude'))),",
+				"          Location = iif(isNull(toString(byName('Location'))), 'Not Available', toString(byName('Location')))) ~> derivedColumn1",
+				"flatten3 derive(Comments = split(Violations, 'Comments')) ~> derivedColumn2",
+				"derivedColumn2 foldDown(unroll(Comments),",
+				"     mapColumn(",
+				"          Comments",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten2",
+				"derivedColumn1 foldDown(unroll(ViolationComments),",
+				"     mapColumn(",
+				"          {Inspection ID},",
+				"          {DBA Name},",
+				"          {AKA Name},",
+				"          {License #},",
+				"          {Facility Type},",
+				"          Risk,",
+				"          Address,",
+				"          City,",
+				"          State,",
+				"          Zip,",
+				"          {Inspection Date},",
+				"          {Inspection Type},",
+				"          Results,",
+				"          Latitude,",
+				"          Longitude,",
+				"          Location,",
+				"          ViolationDetails,",
+				"          ViolationComments",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten3",
+				"flatten2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}
