@@ -15,10 +15,10 @@
 			"sinks": [],
 			"transformations": [
 				{
-					"name": "derivedColumn1"
+					"name": "unpivot1"
 				},
 				{
-					"name": "unpivot1"
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -141,28 +141,29 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 derive({Violation Description - 1} = toString({Violation Description - 1})) ~> derivedColumn1",
-				"derivedColumn1 unpivot(output(",
-				"          ViolationIndex as integer,",
+				"select1 unpivot(output(",
+				"          ViolationIndex as string,",
 				"          {Violation Points - 1} as double,",
-				"          {Violation Points - 2} as double",
+				"          {Violation Points - 2} as double,",
+				"          {Violation Description - 1} as byte",
 				"     ),",
 				"     ungroupBy({Restaurant Name},",
 				"          {Inspection Type},",
 				"          {Inspection Date},",
+				"          {Inspection Score}),",
+				"     lateral: false,",
+				"     ignoreNullPivots: true) ~> unpivot1",
+				"source1 select(mapColumn(",
+				"          {Restaurant Name},",
+				"          {Inspection Type},",
+				"          {Inspection Date},",
 				"          {Inspection Score},",
-				"          {Street Number},",
-				"          {Street Name},",
-				"          {Street Direction},",
-				"          {Street Type},",
-				"          {Street Unit},",
-				"          {Street Address},",
-				"          {Zip Code},",
-				"          {Inspection Month},",
-				"          {Inspection Year},",
-				"          {Lat Long Location}),",
-				"     lateral: true,",
-				"     ignoreNullPivots: true) ~> unpivot1"
+				"          {Violation Points - 1},",
+				"          {Violation Points - 2},",
+				"          {Violation Description - 1}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1"
 			]
 		}
 	}
