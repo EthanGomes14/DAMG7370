@@ -43,6 +43,12 @@
 				},
 				{
 					"name": "surrogateKey1"
+				},
+				{
+					"name": "alterRow1"
+				},
+				{
+					"name": "aggregate1"
 				}
 			],
 			"scriptLines": [
@@ -310,7 +316,8 @@
 				"          {Violation Points - 23} = toString({Violation Points - 23}),",
 				"          {Violation Points - 24} = toString({Violation Points - 24}),",
 				"          {Violation Points - 25} = toString({Violation Points - 25}),",
-				"          {All Violations} = toString(null())) ~> derivedColumn1",
+				"          {All Violations} = toString(null()),",
+				"          {Violation Description - 1} = iif(isNull(toString(byName('{Violation Description - 1}'))), 'Unknown', toString(byName('{Violation Description - 1}')))) ~> derivedColumn1",
 				"select1 pivot(groupBy({Restaurant Name},",
 				"          {Inspection Type},",
 				"          {Inspection Date},",
@@ -460,7 +467,22 @@
 				"MapDrifted1 keyGenerate(output(ID as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKey1",
-				"surrogateKey1 sink(allowSchemaDrift: true,",
+				"aggregate1 alterRow() ~> alterRow1",
+				"surrogateKey1 aggregate(groupBy({Restaurant Name},",
+				"          {Inspection Type},",
+				"          {Inspection Date},",
+				"          {Inspection Score},",
+				"          {Street Number},",
+				"          {Street Name},",
+				"          {Street Direction},",
+				"          {Street Type},",
+				"          {Street Unit},",
+				"          {Street Address},",
+				"          {Zip Code},",
+				"          {Inspection Month},",
+				"          {Inspection Year},",
+				"          {Lat Long Location})) ~> aggregate1",
+				"alterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          ID as decimal(38,0),",
@@ -494,7 +516,6 @@
 				"     skipDuplicateMapOutputs: true,",
 				"     stageInsert: true,",
 				"     mapColumn(",
-				"          ID,",
 				"          {Restaurant Name},",
 				"          {Inspection Type},",
 				"          {Inspection Date},",
@@ -508,12 +529,7 @@
 				"          {Zip Code},",
 				"          {Inspection Month},",
 				"          {Inspection Year},",
-				"          {Lat Long Location},",
-				"          Index,",
-				"          {Violation Description},",
-				"          {Violation Detail},",
-				"          {Violation Memo},",
-				"          {Violation Points}",
+				"          {Lat Long Location}",
 				"     )) ~> sink1"
 			]
 		}
