@@ -45,10 +45,7 @@
 					"name": "surrogateKey1"
 				},
 				{
-					"name": "alterRow1"
-				},
-				{
-					"name": "aggregate1"
+					"name": "filter1"
 				}
 			],
 			"scriptLines": [
@@ -467,22 +464,11 @@
 				"MapDrifted1 keyGenerate(output(ID as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKey1",
-				"aggregate1 alterRow() ~> alterRow1",
-				"surrogateKey1 aggregate(groupBy({Restaurant Name},",
-				"          {Inspection Type},",
-				"          {Inspection Date},",
-				"          {Inspection Score},",
-				"          {Street Number},",
-				"          {Street Name},",
-				"          {Street Direction},",
-				"          {Street Type},",
-				"          {Street Unit},",
-				"          {Street Address},",
-				"          {Zip Code},",
-				"          {Inspection Month},",
-				"          {Inspection Year},",
-				"          {Lat Long Location})) ~> aggregate1",
-				"alterRow1 sink(allowSchemaDrift: true,",
+				"source1 filter(like(upper({Restaurant Name}), 'MCDONALD%')",
+				"",
+				"",
+				") ~> filter1",
+				"surrogateKey1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          ID as decimal(38,0),",
@@ -512,10 +498,9 @@
 				"     upsertable:false,",
 				"     truncate:true,",
 				"     format: 'table',",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
 				"     stageInsert: true,",
 				"     mapColumn(",
+				"          ID,",
 				"          {Restaurant Name},",
 				"          {Inspection Type},",
 				"          {Inspection Date},",
@@ -529,7 +514,12 @@
 				"          {Zip Code},",
 				"          {Inspection Month},",
 				"          {Inspection Year},",
-				"          {Lat Long Location}",
+				"          {Lat Long Location},",
+				"          Index,",
+				"          {Violation Description},",
+				"          {Violation Detail},",
+				"          {Violation Memo},",
+				"          {Violation Points}",
 				"     )) ~> sink1"
 			]
 		}
