@@ -12,7 +12,15 @@
 					"name": "source1"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Parquet1",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "derivedColumn1"
@@ -113,7 +121,47 @@
 				"          Inspection_Type = {Inspection Type},",
 				"          Violation_Comments = ViolationComments,",
 				"          Violation_ID = ViolationID,",
-				"          Violation_Type = ViolationType) ~> derivedColumn5"
+				"          Violation_Type = ViolationType) ~> derivedColumn5",
+				"derivedColumn5 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          Inspection_ID = {Inspection ID},",
+				"          {DBA Name},",
+				"          {AKA Name},",
+				"          {License #},",
+				"          {Facility Type},",
+				"          Risk,",
+				"          Address,",
+				"          City,",
+				"          State,",
+				"          Zip,",
+				"          {Inspection Date},",
+				"          {Inspection Type},",
+				"          Results,",
+				"          Violations,",
+				"          Latitude,",
+				"          Longitude,",
+				"          Location,",
+				"          ViolationComments,",
+				"          ViolationID,",
+				"          ViolationType,",
+				"          Inspection_ID,",
+				"          DBA_Name,",
+				"          AKA_Name,",
+				"          {License_#},",
+				"          Facility_Type,",
+				"          Inspection_Date,",
+				"          Inspection_Type,",
+				"          Violation_Comments,",
+				"          Violation_ID,",
+				"          Violation_Type",
+				"     )) ~> sink1"
 			]
 		}
 	}
