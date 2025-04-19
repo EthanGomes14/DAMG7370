@@ -167,6 +167,7 @@
 				"     skipDuplicateMapOutputs: true) ~> select1",
 				"source1 derive({Violation Points - 1} = toString({Violation Points - 1}),",
 				"          {Violation Points - 2} = toString({Violation Points - 2}),",
+				"          {Violation Points - 3} = toString({Violation Points - 3}),",
 				"          {All Violations} = toString(null())) ~> derivedColumn1"
 			]
 		}
