@@ -45,7 +45,10 @@
 					"name": "surrogateKey1"
 				},
 				{
-					"name": "filter1"
+					"name": "alterRow1"
+				},
+				{
+					"name": "window1"
 				}
 			],
 			"scriptLines": [
@@ -465,11 +468,29 @@
 				"MapDrifted1 keyGenerate(output(ID as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKey1",
-				"source1 filter(like(upper({Restaurant Name}), 'MCDONALD%')",
-				"",
-				"",
-				") ~> filter1",
-				"surrogateKey1 sink(allowSchemaDrift: true,",
+				"window1 alterRow(deleteIf(rowNum > 1)) ~> alterRow1",
+				"surrogateKey1 window(over({Restaurant Name},",
+				"          {Inspection Type},",
+				"          {Inspection Date},",
+				"          {Inspection Score},",
+				"          {Street Name},",
+				"          {Street Direction},",
+				"          {Street Type},",
+				"          {Street Unit},",
+				"          {Street Address},",
+				"          {Zip Code},",
+				"          {Inspection Month},",
+				"          {Inspection Year},",
+				"          {Lat Long Location},",
+				"          Index,",
+				"          {Violation Description},",
+				"          {Violation Detail},",
+				"          {Violation Memo},",
+				"          {Violation Points},",
+				"          {Street Number}),",
+				"     asc(ID, true),",
+				"     rowNum = rowNumber()) ~> window1",
+				"alterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          ID as decimal(38,0),",
@@ -518,7 +539,7 @@
 				"          VIOLATION_DESCRIPTION = {Violation Description},",
 				"          VIOLATION_DETAIL = {Violation Detail},",
 				"          VIOLATION_MEMO = {Violation Memo},",
-				"          VIOLATION_POINTS = {Violation Points}",
+				"          VIOLATION_POINTS = {Violation Memo}",
 				"     )) ~> sink1"
 			]
 		}
