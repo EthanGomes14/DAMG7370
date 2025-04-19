@@ -24,10 +24,13 @@
 					"name": "derivedColumn2"
 				},
 				{
-					"name": "aggregate1"
+					"name": "derivedColumn3"
 				},
 				{
-					"name": "derivedColumn3"
+					"name": "derivedColumn4"
+				},
+				{
+					"name": "derivedColumn5"
 				}
 			],
 			"scriptLines": [
@@ -73,7 +76,7 @@
 				"          {AKA Name},",
 				"          {License #},",
 				"          {Facility Type},",
-				"          Risk = {Facility Type},",
+				"          Risk,",
 				"          Address,",
 				"          City,",
 				"          State,",
@@ -90,9 +93,27 @@
 				"     skipDuplicateMapOutputs: false) ~> flatten1",
 				"flatten1 derive(ViolationComments = split(Violations, '- Comments:')[2],",
 				"          ViolationID = split(Violations, '.')[1],",
-				"          Violations = split(Violations, '.')[2]) ~> derivedColumn2",
-				"derivedColumn2 aggregate(max = count(1)) ~> aggregate1",
-				"derivedColumn1 derive(Violations = split(Violations,'|')) ~> derivedColumn3"
+				"          ViolationType = split(Violations, '.')[2]) ~> derivedColumn2",
+				"derivedColumn1 derive(Violations = split(Violations,'|')) ~> derivedColumn3",
+				"derivedColumn2 derive(ViolationComments = trim(ViolationComments),",
+				"          ViolationID = trim(ViolationID),",
+				"          ViolationType = trim(ViolationType),",
+				"          {Inspection ID} = toInteger({Inspection ID}),",
+				"          {License #} = toInteger({License #}),",
+				"          Zip = toInteger(Zip),",
+				"          Latitude = toFloat(Latitude),",
+				"          Longitude = toFloat(Longitude)) ~> derivedColumn4",
+				"derivedColumn4 derive(ViolationID = toInteger(ViolationID),",
+				"          Inspection_ID = {Inspection ID},",
+				"          DBA_Name = {DBA Name},",
+				"          AKA_Name = {AKA Name},",
+				"          {License_#} = {License #},",
+				"          Facility_Type = {Facility Type},",
+				"          Inspection_Date = {Inspection Date},",
+				"          Inspection_Type = {Inspection Type},",
+				"          Violation_Comments = ViolationComments,",
+				"          Violation_ID = ViolationID,",
+				"          Violation_Type = ViolationType) ~> derivedColumn5"
 			]
 		}
 	}
