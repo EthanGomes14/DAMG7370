@@ -1,0 +1,103 @@
+{
+	"name": "SnowflakeTable4",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Snowflake_LS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeV2Table",
+		"schema": [
+			{
+				"name": "ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "Restaurant Name",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "Inspection Type",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "Inspection Date",
+				"type": "DATE"
+			},
+			{
+				"name": "Inspection Score",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "Street Number",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "Street Name",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "Street Direction",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "Street Type",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "Street Unit",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "Street Address",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "Zip Code",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "Inspection Month",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "Inspection Year",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "Lat Long Location",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "Index",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "Violation Description",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "Violation Detail",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "Violation Memo",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "Violation Points",
+				"type": "VARCHAR"
+			}
+		],
+		"typeProperties": {
+			"schema": "ETHAN_DADABI_SCHEMA",
+			"table": "FOOD_INSPECTIONS_DALLAS"
+		}
+	}
+}

@@ -12,7 +12,15 @@
 					"name": "source1"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTable4",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "unpivot1"
@@ -32,6 +40,9 @@
 				{
 					"name": "MapDrifted1",
 					"description": "Creates an explicit mapping for each drifted column"
+				},
+				{
+					"name": "surrogateKey1"
 				}
 			],
 			"scriptLines": [
@@ -445,7 +456,65 @@
 				"pivot1 derive({Violation Description} = toString(byName('Violation Description')),",
 				"          {Violation Detail} = toString(byName('Violation Detail')),",
 				"          {Violation Memo} = toString(byName('Violation Memo')),",
-				"          {Violation Points} = toString(byName('Violation Points'))) ~> MapDrifted1"
+				"          {Violation Points} = toString(byName('Violation Points'))) ~> MapDrifted1",
+				"MapDrifted1 keyGenerate(output(ID as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"surrogateKey1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          ID as decimal(38,0),",
+				"          {Restaurant Name} as string,",
+				"          {Inspection Type} as string,",
+				"          {Inspection Date} as date,",
+				"          {Inspection Score} as decimal(38,0),",
+				"          {Street Number} as decimal(38,0),",
+				"          {Street Name} as string,",
+				"          {Street Direction} as string,",
+				"          {Street Type} as string,",
+				"          {Street Unit} as string,",
+				"          {Street Address} as string,",
+				"          {Zip Code} as string,",
+				"          {Inspection Month} as string,",
+				"          {Inspection Year} as string,",
+				"          {Lat Long Location} as string,",
+				"          Index as string,",
+				"          {Violation Description} as string,",
+				"          {Violation Detail} as string,",
+				"          {Violation Memo} as string,",
+				"          {Violation Points} as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          ID,",
+				"          {Restaurant Name},",
+				"          {Inspection Type},",
+				"          {Inspection Date},",
+				"          {Inspection Score},",
+				"          {Street Number},",
+				"          {Street Name},",
+				"          {Street Direction},",
+				"          {Street Type},",
+				"          {Street Unit},",
+				"          {Street Address},",
+				"          {Zip Code},",
+				"          {Inspection Month},",
+				"          {Inspection Year},",
+				"          {Lat Long Location},",
+				"          Index,",
+				"          {Violation Description},",
+				"          {Violation Detail},",
+				"          {Violation Memo},",
+				"          {Violation Points}",
+				"     )) ~> sink1"
 			]
 		}
 	}
