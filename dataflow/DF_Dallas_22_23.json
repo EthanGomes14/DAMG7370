@@ -49,6 +49,15 @@
 				},
 				{
 					"name": "window1"
+				},
+				{
+					"name": "filter2"
+				},
+				{
+					"name": "derivedColumn3"
+				},
+				{
+					"name": "derivedColumn4"
 				}
 			],
 			"scriptLines": [
@@ -468,8 +477,8 @@
 				"MapDrifted1 keyGenerate(output(ID as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKey1",
-				"window1 alterRow(deleteIf(rowNum > 1)) ~> alterRow1",
-				"surrogateKey1 window(over({Restaurant Name},",
+				"filter2 alterRow(deleteIf(rowNum > 1)) ~> alterRow1",
+				"derivedColumn3 window(over({Restaurant Name},",
 				"          {Inspection Type},",
 				"          {Inspection Date},",
 				"          {Inspection Score},",
@@ -482,7 +491,6 @@
 				"          {Inspection Month},",
 				"          {Inspection Year},",
 				"          {Lat Long Location},",
-				"          Index,",
 				"          {Violation Description},",
 				"          {Violation Detail},",
 				"          {Violation Memo},",
@@ -490,7 +498,14 @@
 				"          {Street Number}),",
 				"     asc(ID, true),",
 				"     rowNum = rowNumber()) ~> window1",
-				"alterRow1 sink(allowSchemaDrift: true,",
+				"window1 filter(rowNum > 1) ~> filter2",
+				"surrogateKey1 derive({Restaurant Name} = rtrim({Restaurant Name},''),",
+				"          {Inspection Type} = rtrim({Inspection Type},''),",
+				"          {Violation Description} = rtrim({Violation Description},''),",
+				"          {Violation Detail} = rtrim({Violation Detail}, ''),",
+				"          {Violation Memo} = rtrim({Violation Memo}, '')) ~> derivedColumn3",
+				"alterRow1 derive({Lat Long Location} = ERROR_FUNCTION('')) ~> derivedColumn4",
+				"derivedColumn4 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          ID as decimal(38,0),",
