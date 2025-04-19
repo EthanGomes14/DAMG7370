@@ -28,6 +28,10 @@
 				},
 				{
 					"name": "select1"
+				},
+				{
+					"name": "MapDrifted1",
+					"description": "Creates an explicit mapping for each drifted column"
 				}
 			],
 			"scriptLines": [
@@ -437,7 +441,11 @@
 				"          Index",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"pivot1 derive({Violation Description} = toString(byName('Violation Description')),",
+				"          {Violation Detail} = toString(byName('Violation Detail')),",
+				"          {Violation Memo} = toString(byName('Violation Memo')),",
+				"          {Violation Points} = toString(byName('Violation Points'))) ~> MapDrifted1"
 			]
 		}
 	}
