@@ -19,6 +19,9 @@
 				},
 				{
 					"name": "select1"
+				},
+				{
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -143,27 +146,25 @@
 				"     ignoreNoFilesFound: false) ~> source1",
 				"select1 unpivot(output(",
 				"          ViolationIndex as string,",
-				"          {Violation Points - 1} as double,",
-				"          {Violation Points - 2} as double",
+				"          {Violation Points - 1} as string,",
+				"          {Violation Points - 2} as string,",
+				"          {Violation Description - 1} as string",
 				"     ),",
 				"     ungroupBy({Restaurant Name},",
-				"          {Inspection Type},",
-				"          {Inspection Date},",
-				"          {Inspection Score},",
-				"          {Violation Description - 1}),",
+				"          {Inspection Type}),",
 				"     lateral: true,",
 				"     ignoreNullPivots: true) ~> unpivot1",
-				"source1 select(mapColumn(",
+				"derivedColumn1 select(mapColumn(",
 				"          {Restaurant Name},",
 				"          {Inspection Type},",
-				"          {Inspection Date},",
-				"          {Inspection Score},",
 				"          {Violation Points - 1},",
 				"          {Violation Points - 2},",
 				"          {Violation Description - 1}",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"source1 derive({Violation Points - 1} = toString({Violation Points - 1}),",
+				"          {Violation Points - 2} = toString({Violation Points - 2})) ~> derivedColumn1"
 			]
 		}
 	}
