@@ -15,83 +15,79 @@
 				"scale": 0
 			},
 			{
-				"name": "Restaurant Name",
+				"name": "RESTAURANT_NAME",
 				"type": "VARCHAR"
 			},
 			{
-				"name": "Inspection Type",
+				"name": "INSPECTION_TYPE",
 				"type": "VARCHAR"
 			},
 			{
-				"name": "Inspection Date",
+				"name": "INSPECTION_DATE",
 				"type": "DATE"
 			},
 			{
-				"name": "Inspection Score",
+				"name": "INSPECTION_SCORE",
 				"type": "NUMBER",
 				"precision": 38,
 				"scale": 0
 			},
 			{
-				"name": "Street Number",
+				"name": "STREET_NUMBER",
 				"type": "NUMBER",
 				"precision": 38,
 				"scale": 0
 			},
 			{
-				"name": "Street Name",
+				"name": "STREET_NAME",
 				"type": "VARCHAR"
 			},
 			{
-				"name": "Street Direction",
+				"name": "STREET_DIRECTION",
 				"type": "VARCHAR"
 			},
 			{
-				"name": "Street Type",
+				"name": "STREET_TYPE",
 				"type": "VARCHAR"
 			},
 			{
-				"name": "Street Unit",
+				"name": "STREET_UNIT",
 				"type": "VARCHAR"
 			},
 			{
-				"name": "Street Address",
+				"name": "STREET_ADDRESS",
 				"type": "VARCHAR"
 			},
 			{
-				"name": "Zip Code",
+				"name": "ZIP_CODE",
 				"type": "VARCHAR"
 			},
 			{
-				"name": "Inspection Month",
+				"name": "INSPECTION_MONTH",
 				"type": "VARCHAR"
 			},
 			{
-				"name": "Inspection Year",
+				"name": "INSPECTION_YEAR",
 				"type": "VARCHAR"
 			},
 			{
-				"name": "Lat Long Location",
+				"name": "LAT_LONG_LOCATION",
 				"type": "VARCHAR"
 			},
 			{
-				"name": "Index",
+				"name": "VIOLATION_DESCRIPTION",
 				"type": "VARCHAR"
 			},
 			{
-				"name": "Violation Description",
+				"name": "VIOLATION_DETAIL",
 				"type": "VARCHAR"
 			},
 			{
-				"name": "Violation Detail",
+				"name": "VIOLATION_MEMO",
 				"type": "VARCHAR"
 			},
 			{
-				"name": "Violation Memo",
-				"type": "VARCHAR"
-			},
-			{
-				"name": "Violation Points",
+				"name": "VIOLATION_POINTS",
 				"type": "VARCHAR"
 			}
 		],
