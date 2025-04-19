@@ -5,6 +5,10 @@
 		"typeProperties": {
 			"sources": [
 				{
+					"dataset": {
+						"referenceName": "Chicago_22_23",
+						"type": "DatasetReference"
+					},
 					"name": "source1"
 				}
 			],
@@ -48,7 +52,8 @@
 				"          Location as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
-				"     validateSchema: false) ~> source1",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
 				"source1 derive({AKA Name} = iif(isNull(toString(byName('AKA Name'))), 'Unknown', toString(byName('AKA Name'))),",
 				"          {Facility Type} = iif(isNull(toString(byName('Facility Type'))), 'Not Specified', toString(byName('Facility Type'))),",
 				"          Risk = iif(isNull(toString(byName('Risk'))), 'Unknown', toString(byName('Risk'))),",
