@@ -51,13 +51,13 @@
 					"name": "window1"
 				},
 				{
-					"name": "filter2"
-				},
-				{
 					"name": "derivedColumn3"
 				},
 				{
 					"name": "derivedColumn4"
+				},
+				{
+					"name": "derivedColumn5"
 				}
 			],
 			"scriptLines": [
@@ -477,7 +477,7 @@
 				"MapDrifted1 keyGenerate(output(ID as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKey1",
-				"filter2 alterRow(deleteIf(rowNum > 1)) ~> alterRow1",
+				"window1 alterRow(deleteIf(rowNum > 1)) ~> alterRow1",
 				"derivedColumn3 window(over({Restaurant Name},",
 				"          {Inspection Type},",
 				"          {Inspection Date},",
@@ -498,14 +498,27 @@
 				"          {Street Number}),",
 				"     asc(ID, true),",
 				"     rowNum = rowNumber()) ~> window1",
-				"window1 filter(rowNum > 1) ~> filter2",
 				"surrogateKey1 derive({Restaurant Name} = rtrim({Restaurant Name},''),",
 				"          {Inspection Type} = rtrim({Inspection Type},''),",
 				"          {Violation Description} = rtrim({Violation Description},''),",
 				"          {Violation Detail} = rtrim({Violation Detail}, ''),",
 				"          {Violation Memo} = rtrim({Violation Memo}, '')) ~> derivedColumn3",
-				"alterRow1 derive({Lat Long Location} = ERROR_FUNCTION('')) ~> derivedColumn4",
-				"derivedColumn4 sink(allowSchemaDrift: true,",
+				"alterRow1 derive({Lat Long Location} = split({Lat Long Location},'\\n')[2]",
+				"",
+				") ~> derivedColumn4",
+				"derivedColumn4 derive({Restaurant Name} = iif(isNull({Restaurant Name}), 'Unknown',{Restaurant Name}),",
+				"          {Inspection Type} = iif(isNull({Inspection Type}), 'Unknown', {Inspection Type}),",
+				"          {Street Name} = iif(isNull({Street Name}), 'Unknown', {Street Name}),",
+				"          {Street Direction} = iif(isNull({Street Direction}), 'NA', {Street Direction}),",
+				"          {Street Type} = iif(isNull({Street Type}), 'NA', {Street Type}),",
+				"          {Street Unit} = iif(isNull({Street Unit}), 'Unknown', {Street Unit}),",
+				"          {Street Address} = iif(isNull({Street Address}), 'Unknown', {Street Address}),",
+				"          {Lat Long Location} = iif(isNull({Lat Long Location}), '(0.0,0.0)', {Lat Long Location}),",
+				"          {Violation Description} = iif(isNull({Violation Description}), 'Unknown', {Violation Description}),",
+				"          {Violation Detail} = iif(isNull({Violation Detail}), 'Unknown', {Violation Detail}),",
+				"          {Violation Memo} = iif(isNull({Violation Memo}), 'Unknown',{Violation Memo}),",
+				"          {Violation Points} = iif(isNull({Violation Points}), '0.0',{Violation Points})) ~> derivedColumn5",
+				"derivedColumn5 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          ID as decimal(38,0),",
@@ -554,7 +567,7 @@
 				"          VIOLATION_DESCRIPTION = {Violation Description},",
 				"          VIOLATION_DETAIL = {Violation Detail},",
 				"          VIOLATION_MEMO = {Violation Memo},",
-				"          VIOLATION_POINTS = {Violation Memo}",
+				"          VIOLATION_POINTS = {Violation Points}",
 				"     )) ~> sink1"
 			]
 		}
