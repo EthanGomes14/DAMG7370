@@ -25,6 +25,9 @@
 				},
 				{
 					"name": "aggregate1"
+				},
+				{
+					"name": "derivedColumn3"
 				}
 			],
 			"scriptLines": [
@@ -50,15 +53,27 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 derive(Violations = split(Violations,'|')) ~> derivedColumn1",
-				"derivedColumn1 foldDown(unroll(Violations),",
+				"source1 derive(Violations = iif(isNull(Violations), 'Unknown', Violations),",
+				"          {DBA Name} = iif(isNull({DBA Name}), 'Unknown', {DBA Name}),",
+				"          {AKA Name} = iif(isNull({AKA Name}), 'Unknown', {AKA Name}),",
+				"          {License #} = iif(isNull({License #}), 'Unknown', {License #}),",
+				"          {Facility Type} = iif(isNull({Facility Type}), 'Unknown', {Facility Type}),",
+				"          Risk = iif(isNull(Risk), 'Unknown', Risk),",
+				"          Address = iif(isNull(Address), 'Unknown', Address),",
+				"          City = iif(isNull(City), 'Unknown', City),",
+				"          State = iif(isNull(State), 'Unknown', State),",
+				"          Zip = iif(isNull(Zip),'0', Zip),",
+				"          Latitude = iif(isNull(Latitude), '0.0', Latitude),",
+				"          Longitude = iif(isNull(Longitude), '0.0', Longitude),",
+				"          Location = iif(isNull(Location), '(0.0, 0.0)', Location)) ~> derivedColumn1",
+				"derivedColumn3 foldDown(unroll(Violations),",
 				"     mapColumn(",
 				"          {Inspection ID},",
 				"          {DBA Name},",
 				"          {AKA Name},",
 				"          {License #},",
 				"          {Facility Type},",
-				"          Risk,",
+				"          Risk = {Facility Type},",
 				"          Address,",
 				"          City,",
 				"          State,",
@@ -73,8 +88,11 @@
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> flatten1",
-				"flatten1 derive(ViolationComments = split(Violations, '- Comments:')[2]) ~> derivedColumn2",
-				"derivedColumn2 aggregate(max = count(1)) ~> aggregate1"
+				"flatten1 derive(ViolationComments = split(Violations, '- Comments:')[2],",
+				"          ViolationID = split(Violations, '.')[1],",
+				"          Violations = split(Violations, '.')[2]) ~> derivedColumn2",
+				"derivedColumn2 aggregate(max = count(1)) ~> aggregate1",
+				"derivedColumn1 derive(Violations = split(Violations,'|')) ~> derivedColumn3"
 			]
 		}
 	}
